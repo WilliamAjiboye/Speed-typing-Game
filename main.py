@@ -10,6 +10,8 @@ time = 60
 timer_running = False
 countdown_job = ''
 user_list = []
+edit_list = True
+
 
 
 def countdown(time_left):
@@ -62,12 +64,40 @@ def compare_and_calculate(user, computer):
                         message=f'CPM={CPM},\n WPM={round(WPM, 2)},\n The words you mistyped={mistyped_words}')
 
 
+def edit(event):
+    global user_list, edit_list
+    no = len(my_input.get('1.0', tkinter.END).strip())
+    if edit_list == True and no == 0:
+        edit_list = False
+        try:
+            last_word = user_list[-1]
+        except IndexError:
+            pass
+        else:
+            index = len(user_list)-1
+            print(index)
+            print(user_list)
+            print(last_word)
+            my_input.insert('1.0', last_word)
+            changed_word = my_input.get('1.0', tkinter.END).strip()
+            go_on = determine_key(event)
+            if go_on:
+                user_list[index] = changed_word
+                my_input.delete('1.0',tkinter.END)
+                print(user_list)
+
+
+
 def add_to_user_list(event):
     global user_list, test_word_list
     word = my_input.get('1.0', tkinter.END).strip()
     user_list.append(word)
     my_input.delete('1.0', 'end')
 
+def determine_key(event):
+    print(event.keysym)
+    if event.keysym=='Shift_R':
+        return True
 
 window = Tk()
 window.title('Speed Typing Tester')
@@ -91,4 +121,7 @@ restart.grid(row=3, column=2)
 
 my_input.bind('<KeyRelease>', check_text_box)
 my_input.bind('<space>', add_to_user_list)
+my_input.bind('<BackSpace>', edit)
+
+window.bind('<KeyPress>',determine_key)
 window.mainloop()
