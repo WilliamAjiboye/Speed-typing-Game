@@ -102,21 +102,22 @@ def add_to_user_list(event):
 window = Tk()
 window.title('Speed Typing Tester')
 window.minsize(width=600, height=600)
+window.config(background='#F6EFBD')
 
-timer = Label(window, text=time, font=('Arial', 30))
+timer = Label(window, text=time, font=('Arial', 30),bg='#F6EFBD',fg='black')
 timer.grid(row=0, column=0, pady=10)
 
-my_label = Label(window, text=test_word, fg='black', font=font, wraplength=650)
+my_label = Label(window, text=test_word, fg='black', font=font, wraplength=650,foreground='white')
 my_label.grid(row=1, column=1)
 
-header = Label(window, text='Speed typing Tester', font=('Arial', 30))
+header = Label(window, text='Speed typing Tester', font=('Arial', 30),fg='#4f54c4',bg='#F6EFBD')
 header.grid(row=0, column=1, pady=10)
 
 my_input = Text(window, width=60, height=3, font=('Arial', 20), borderwidth=3)
 my_input.grid(row=2, column=1, pady=30)
 my_input.focus()
 
-restart = Button(window, text='Restart', command=reset_timer)
+restart = Button(window, text='Restart', command=reset_timer,background='blue')
 restart.grid(row=3, column=2)
 
 my_input.bind('<KeyRelease>', check_text_box)
