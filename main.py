@@ -13,10 +13,10 @@ user_list = []
 edit_list = True
 
 
-
 def countdown(time_left):
     global time, countdown_job
     if time_left > 0:
+
         timer.config(text=time_left)
         countdown_job = window.after(1000, countdown, time_left - 1)
     else:
@@ -67,24 +67,27 @@ def compare_and_calculate(user, computer):
 def edit(event):
     global user_list, edit_list
     no = len(my_input.get('1.0', tkinter.END).strip())
-    if edit_list == True and no == 0:
-        edit_list = False
-        try:
-            last_word = user_list[-1]
-        except IndexError:
-            pass
-        else:
-            index = len(user_list)-1
-            print(index)
-            print(user_list)
-            print(last_word)
-            my_input.insert('1.0', last_word)
+
+    if edit_list == True and no == 0 and len(user_list) > 0:
+        my_input.unbind('<BackSpace>')
+        last_word = user_list[-1]
+        index = len(user_list) - 1
+        my_input.insert('1.0', last_word)
+
+        # Introduce a delay to allow user time to edit
+        def update_word():
             changed_word = my_input.get('1.0', tkinter.END).strip()
-            go_on = determine_key(event)
-            if go_on:
-                user_list[index] = changed_word
-                my_input.delete('1.0',tkinter.END)
-                print(user_list)
+            user_list[index] = changed_word
+            my_input.delete('1.0', tkinter.END)
+            my_input.bind('<BackSpace>', edit)  # Re-bind after editing
+
+        window.after(8000, update_word)  # Delay for 500ms (you can adjust this)
+
+    elif edit_list == True and no != 0:
+        my_input.unbind('<BackSpace>')
+
+
+
 
 
 
@@ -92,12 +95,9 @@ def add_to_user_list(event):
     global user_list, test_word_list
     word = my_input.get('1.0', tkinter.END).strip()
     user_list.append(word)
+    print(user_list)
     my_input.delete('1.0', 'end')
 
-def determine_key(event):
-    print(event.keysym)
-    if event.keysym=='Shift_R':
-        return True
 
 window = Tk()
 window.title('Speed Typing Tester')
@@ -123,5 +123,4 @@ my_input.bind('<KeyRelease>', check_text_box)
 my_input.bind('<space>', add_to_user_list)
 my_input.bind('<BackSpace>', edit)
 
-window.bind('<KeyPress>',determine_key)
 window.mainloop()
